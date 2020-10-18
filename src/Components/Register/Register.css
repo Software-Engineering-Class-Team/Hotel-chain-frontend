@@ -1,0 +1,72 @@
+.entire-register {
+    background: url(../../marina-bay-sands-hotel.png);
+    background-size: cover;
+    height: 100vh;
+    position: absolute;
+    width: 100%;
+}
+.box {
+    background: #FFFFFF;
+border: 1px solid #000000;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 0px 0px 10px 10px;
+width: 500px;
+height: 520px;
+text-align: center;
+margin: 5% auto;
+}
+h3 {
+font-family: Lato;
+font-style: normal;
+font-weight: normal;
+font-size: 20px;
+line-height: 24px;
+letter-spacing: 0.2em;
+color: #000000;
+text-align: center;
+}
+label {
+    font-family: Lato;
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+line-height: 17px;
+letter-spacing: 0.2em;
+color: #A9A9A9;
+}
+#button-register {
+    background: #149B5F;
+border-radius: 45px;
+width: 60%;
+margin: 20px auto;
+height: 50px;
+font-family: Lato;
+font-style: normal;
+font-weight: normal;
+font-size: 15px;
+line-height: 43px;
+letter-spacing: 0.2em;
+
+color: #FFFFFF;
+}
+input {
+    margin: 10px auto;
+    height: 30px;
+    width: 60%;
+}
+#register-login {
+    font-family: Lato;
+font-style: normal;
+font-weight: normal;
+font-size: 15px;
+line-height: 18px;
+letter-spacing: 0.2em;
+
+color: #149B5F;
+}
+.box p {
+    color: red;
+    font-size: 14px;
+    width: 100%;
+}
