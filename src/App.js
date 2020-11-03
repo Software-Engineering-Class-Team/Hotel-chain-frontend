@@ -5,7 +5,7 @@ import Main from './Components/Main/Main';
 import Register from './Components/Register/Register';
 import Login from './Components/Login/Login';
 import Home from './Components/Home/Home';
-
+import Profile from './Components/Profile/Profile';
 function App() {
   return (
     <Router id="entire">
@@ -14,6 +14,7 @@ function App() {
         <Route path="/register" component={Register} />
         <Route path="/login" component={Login} />
         <Route path="/home" component={Home} />
+        <Route path="/profile" component={Profile}/>
       </Switch>
     </Router>
   );

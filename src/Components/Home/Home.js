@@ -11,6 +11,8 @@ class Home extends React.Component {
                 <input></input><br />
                 <label>Check-out date</label><br />
                 <input></input><br />
+                <label>Occupancy</label><br />
+                <input></input><br />
                 <button>FIND HOTEL</button>
                 <h3>Explore cities</h3>
                 <div className="images">

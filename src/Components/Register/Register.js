@@ -10,12 +10,16 @@ class Register extends React.Component {
             confirmPassword: '',
             phone: '',
             error: '',
-            success: ''
+            success: '',
+            fname: '',
+            lname: ''
         };
         this.onTexboxChangeEmail = this.onTexboxChangeEmail.bind(this);
         this.onTexboxChangePassword = this.onTexboxChangePassword.bind(this);
         this.onTexboxChangeConfirmPassword = this.onTexboxChangeConfirmPassword.bind(this);
         this.onTexboxChangePhone = this.onTexboxChangePhone.bind(this);
+        this.onTexboxChangeFname = this.onTexboxChangeFname.bind(this);
+        this.onTexboxChangeLname = this.onTexboxChangeLname.bind(this);
         this.onRegister = this.onRegister.bind(this);
     }
     onTexboxChangeEmail(event) {
@@ -31,12 +35,20 @@ class Register extends React.Component {
     onTexboxChangeConfirmPassword(event) {
         this.setState({ confirmPassword: event.target.value });
     }
+    onTexboxChangeLname(event) {
+        this.setState({ lname: event.target.value });
+    }
+    onTexboxChangeFname(event) {
+        this.setState({ fname: event.target.value });
+    }
     onRegister() {
         const { email,
             password,
             phone,
-            confirmPassword } = this.state;
-        if(!email || !password || !phone || !confirmPassword) {
+            confirmPassword,
+            fname,
+            lname } = this.state;
+        if(!email || !password || !phone || !confirmPassword || !fname || lname) {
             this.setState({error: 'Fill all fields'});
             return;
         }
@@ -51,7 +63,9 @@ class Register extends React.Component {
             body: JSON.stringify({
                 username: phone,
                 email,
-                password
+                password,
+                fname,
+                lname
             })
         }).then(res => res.json())
          .then(json => {
@@ -60,6 +74,8 @@ class Register extends React.Component {
                 password: '',
                 confirmPassword: '',
                 phone: '',
+                fname: '',
+                lname: '',
                 success: json.message});
              } else {
                 this.setState({error: json.message});
@@ -73,6 +89,8 @@ class Register extends React.Component {
             phone,
             error,
             success,
+            fname,
+            lname,
             confirmPassword } = this.state;
         return (
             <div className="entire-register">
@@ -84,6 +102,10 @@ class Register extends React.Component {
                     <input value={phone} onChange={this.onTexboxChangePhone} /><br />
                     <label>Email</label><br />
                     <input value={email} onChange={this.onTexboxChangeEmail} /><br />
+                    <label>First name</label><br />
+                    <input value={fname} onChange={this.onTexboxChangeFname} /><br />
+                    <label>Last name</label><br />
+                    <input value={lname} onChange={this.onTexboxChangeLname} /><br />
                     <label>Password</label><br />
                     <input type="password" value={password} onChange={this.onTexboxChangePassword} /><br />
                     <label>Repeat Password</label><br />
@@ -97,5 +119,4 @@ class Register extends React.Component {
         );
     }
 }
-
 export default Register;

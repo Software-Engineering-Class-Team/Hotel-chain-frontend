@@ -6,13 +6,13 @@ class Main extends React.Component {
         return (
             <div id="entire">
                 <ul>
-                    <Link className="link" to="login">
+                    <Link className="link" to="/login">
                         <li>Log in</li>
                     </Link>
-                    <Link className="link" to="register">
+                    <Link className="link" to="/register">
                         <li>Register</li>
                     </Link>
-                    <Link className="link" to="">
+                    <Link className="link" to="/profile"> 
                         <li>Profile</li>
                     </Link>
                 </ul>
