@@ -1,32 +1,120 @@
 import React from 'react';
+import { getFromStorage } from '../../utils/storage';
 import './Home.css';
 class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            city: '',
+            roomTypes: [],
+            roomTypeID: -1,
+            from: '',
+            to: '',
+            hotelID: -1,
+            message: ''
+        };
+        this.onTexboxChangeCity = this.onTexboxChangeCity.bind(this);
+        this.onEnterCity = this.onEnterCity.bind(this);
+        this.onChoose = this.onChoose.bind(this);
+        this.onTexboxChangeFrom = this.onTexboxChangeFrom.bind(this);
+        this.onTexboxChangeTo = this.onTexboxChangeTo.bind(this);
+        this.onChooseDates = this.onChooseDates.bind(this);
+    }
+    cities = [
+        'Amsterdam',
+        'Mountain City'
+    ];
+    onTexboxChangeCity(event) {
+        this.setState({ city: event.target.value });
+    }
+    onTexboxChangeFrom(event) {
+        this.setState({ from: event.target.value });
+    }
+    onTexboxChangeTo(event) {
+        this.setState({ to: event.target.value });
+    }
+    onEnterCity() {
+        const { city } = this.state;
+        const id = 1 + this.cities.indexOf(city);
+        fetch(`http://localhost:8080/api/hotel/about?Id=${id}`, { headers: { 'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*' } })
+            .then(res => res.json())
+            .then(json => {
+                this.setState({
+                    roomTypes: json,
+                    hotelID: id
+                });
+            });
+    }
+    onChoose(i) {
+        this.setState({ roomTypeID: i });
+    }
+    onChooseDates() {
+        const { from,
+            to,
+            hotelID,
+            roomTypeID } = this.state;
+        const obj = getFromStorage('the_main_app');
+        if (!obj || !obj.token)
+            return;
+        console.log(`${from} ${to} ${hotelID} ${roomTypeID}`)
+        fetch('http://localhost:8080/api/room/book', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Access-Control-Allow-Origin': 'X-Auth',
+                'Authorization': `Bearer ${obj.token}`
+            },
+            body: JSON.stringify({
+                from,
+                to,
+                hotelId: hotelID,
+                roomId: roomTypeID
+            })
+        }).then(res => res.json())
+            .then(json => {
+                this.setState({ message: json.message })
+            });
+    }
     render() {
-        return (
-            <div className="home">
+        const { roomTypes,
+            roomTypeID,
+            city,
+            from,
+            to,
+            message } = this.state;
+        if (message) {
+            return <div className="home">
+                <h1>Room successfully booked!</h1>
+            </div>;
+        }
+        if (roomTypes.length === 0) {
+            return <div className="home">
                 <h1>Explore hotels</h1>
                 <label>Where are you going?</label><br />
-                <input></input><br />
-                <label>Check-in date</label><br />
-                <input></input><br />
-                <label>Check-out date</label><br />
-                <input></input><br />
-                <label>Occupancy</label><br />
-                <input></input><br />
-                <button>FIND HOTEL</button>
-                <h3>Explore cities</h3>
-                <div className="images">
-                    <div>
-                        <img src={require('./an-expanse-of-city.png')} alt="Amsterdam" width="500px" height="350px" />
-                        <div>Amsterdam</div>
-                    </div>
-                    <div>
-                        <img src={require('./large-mountains-surround-a-city.png')} alt="Mountain" width="500px" height="350px" />
-                        <div>Mountain city</div>
-                    </div>
-                </div>
+                <input value={city} onChange={this.onTexboxChangeCity}></input>
+                <button onClick={this.onEnterCity}>Enter</button>
             </div>
-        );
+        }
+        if (roomTypeID === -1) {
+            return <div className="home">
+                <h1>Choose room type</h1>
+                {roomTypes.map((el, i) => <div>
+                    <p>{el.name}</p>
+                    <p>Size (for how many people): {el.size}</p>
+                    <p>Capacity (square meters): {el.capacity}</p>
+                    <button onClick={() => this.onChoose(i + 1)}>Choose</button>
+                </div>)}
+            </div>
+        }
+
+        return <div className="home">
+            <h1>Choose check-in and check-out dates</h1>
+            <label>Check-in date</label><br />
+            <input value={from} onChange={this.onTexboxChangeFrom}></input><br />
+            <label>Check-out date</label><br />
+            <input value={to} onChange={this.onTexboxChangeTo}></input><br />
+            <button onClick={this.onChooseDates}>Choose</button>
+        </div>
     }
 }
 

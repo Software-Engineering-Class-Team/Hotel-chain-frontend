@@ -48,7 +48,7 @@ class Register extends React.Component {
             confirmPassword,
             fname,
             lname } = this.state;
-        if(!email || !password || !phone || !confirmPassword || !fname || lname) {
+        if(!email || !password || !phone || !confirmPassword || !fname || !lname) {
             this.setState({error: 'Fill all fields'});
             return;
         }

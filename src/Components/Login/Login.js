@@ -31,7 +31,7 @@ class Login extends React.Component {
         fetch('http://localhost:8080/api/auth/signin', {
             method: 'POST',
             headers: { 'Content-type': 'application/json',
-            'Access-Control-Allow-Origin': 'X-Auth' },
+            'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({
                 username,
                 password
