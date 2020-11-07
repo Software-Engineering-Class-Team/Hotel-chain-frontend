@@ -39,9 +39,10 @@ class Login extends React.Component {
         }).then(res => res.json())
          .then(json => {
              if(json.accessToken) {
-                this.setState({success: `You successfully logged in. Your role is ${json.roles[0]}`});
+                this.setState({success: `You successfully logged in. Your token is ${json.accessToken}`});
                 setInStorage('the_main_app', { token: json.accessToken,
                     role: json.roles[0] });
+                
              } else {
                  this.setState({error: 'Username or password aren\'t correct'});
              }

@@ -11,7 +11,8 @@ class Home extends React.Component {
             from: '',
             to: '',
             hotelID: -1,
-            message: ''
+            message: '',
+            error: ''
         };
         this.onTexboxChangeCity = this.onTexboxChangeCity.bind(this);
         this.onEnterCity = this.onEnterCity.bind(this);
@@ -36,6 +37,9 @@ class Home extends React.Component {
     onEnterCity() {
         const { city } = this.state;
         const id = 1 + this.cities.indexOf(city);
+        if (id === 0) {
+            return;
+        }
         fetch(`http://localhost:8080/api/hotel/about?Id=${id}`, { headers: { 'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*' } })
             .then(res => res.json())
             .then(json => {
@@ -56,7 +60,6 @@ class Home extends React.Component {
         const obj = getFromStorage('the_main_app');
         if (!obj || !obj.token)
             return;
-        console.log(`${from} ${to} ${hotelID} ${roomTypeID}`)
         fetch('http://localhost:8080/api/room/book', {
             method: 'POST',
             headers: {
@@ -72,7 +75,7 @@ class Home extends React.Component {
             })
         }).then(res => res.json())
             .then(json => {
-                this.setState({ message: json.message })
+                this.setState({ message: json.message });
             });
     }
     render() {
@@ -81,7 +84,8 @@ class Home extends React.Component {
             city,
             from,
             to,
-            message } = this.state;
+            message,
+            error } = this.state;
         if (message) {
             return <div className="home">
                 <h1>Room successfully booked!</h1>
@@ -90,6 +94,7 @@ class Home extends React.Component {
         if (roomTypes.length === 0) {
             return <div className="home">
                 <h1>Explore hotels</h1>
+                {error ? (<p>{error}</p>) : null}
                 <label>Where are you going?</label><br />
                 <input value={city} onChange={this.onTexboxChangeCity}></input>
                 <button onClick={this.onEnterCity}>Enter</button>
@@ -98,7 +103,7 @@ class Home extends React.Component {
         if (roomTypeID === -1) {
             return <div className="home">
                 <h1>Choose room type</h1>
-                {roomTypes.map((el, i) => <div>
+                {roomTypes.map((el, i) => <div key={i}>
                     <p>{el.name}</p>
                     <p>Size (for how many people): {el.size}</p>
                     <p>Capacity (square meters): {el.capacity}</p>
@@ -109,6 +114,7 @@ class Home extends React.Component {
 
         return <div className="home">
             <h1>Choose check-in and check-out dates</h1>
+            {error ? (<p>{error}</p>) : null}
             <label>Check-in date</label><br />
             <input value={from} onChange={this.onTexboxChangeFrom}></input><br />
             <label>Check-out date</label><br />
