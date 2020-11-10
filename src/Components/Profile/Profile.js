@@ -13,8 +13,8 @@ class Profile extends React.Component {
         const obj = getFromStorage('the_main_app');
         if (!obj || !obj.token)
             return;
-        fetch('http://localhost:8080/api/profile/getallbookings', { 
-            method: 'POST',
+        fetch('http://localhost:8080/api/profile/getallbookings', {
+            method: 'get',
             headers: {
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': 'X-Auth',
