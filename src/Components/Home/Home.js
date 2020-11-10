@@ -40,7 +40,12 @@ class Home extends React.Component {
         if (id === 0) {
             return;
         }
-        fetch(`http://localhost:8080/api/hotel/about?Id=${id}`, { headers: { 'Content-type': 'application/json', 'Access-Control-Allow-Origin': '*' } })
+        fetch(`/api/hotel/about?Id=${id}`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        })
             .then(res => res.json())
             .then(json => {
                 this.setState({
@@ -60,7 +65,7 @@ class Home extends React.Component {
         const obj = getFromStorage('the_main_app');
         if (!obj || !obj.token)
             return;
-        fetch('http://localhost:8080/api/room/book', {
+        fetch('/api/room/book', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',

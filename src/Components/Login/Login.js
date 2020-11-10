@@ -28,10 +28,9 @@ class Login extends React.Component {
             this.setState({error: 'Fill all fields'});
             return;
         }
-        fetch('http://localhost:8080/api/auth/signin', {
+        fetch('/api/auth/signin', {
             method: 'POST',
-            headers: { 'Content-type': 'application/json',
-            'Access-Control-Allow-Origin': '*' },
+            headers: { 'Content-type': 'application/json',},
             body: JSON.stringify({
                 username,
                 password
