@@ -56,10 +56,9 @@ class Register extends React.Component {
             this.setState({error: 'Passwords don\'t match'});
             return;
         }
-        fetch('http://localhost:8080/api/auth/signup', {
+        fetch('/api/auth/signup', {
             method: 'POST',
-            headers: { 'Content-type': 'application/json',
-            'Access-Control-Allow-Origin': 'X-Auth' },
+            headers: { 'Content-type': 'application/json'},
             body: JSON.stringify({
                 username: phone,
                 email,
