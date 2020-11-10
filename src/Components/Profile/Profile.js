@@ -81,7 +81,7 @@ class Profile extends React.Component {
                 <p>{el.hotel.name}, {el.hotel.address}</p>
                 <p>{el.room.roomtype.name} room | Size: {el.room.roomtype.size} | Capacity: {el.room.roomtype.capacity}</p>
                 <p>Check in: {el.checkin.substring(0, 10)}</p>
-                <p>Check out: {el.checkout.substring(0, 10)}</p><br/>
+                <p>Check out: {el.checkout.substring(0, 10)}</p>
                 <button onClick={() => this.onCancel(i)}>Cancel booking</button>
             </div>)}
         </div>

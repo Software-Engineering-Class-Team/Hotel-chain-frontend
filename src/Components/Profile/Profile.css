@@ -2,3 +2,14 @@
     margin-top: -200px;
     text-align: center;
 }
+.profile .booking {
+    border: thin solid black;
+    width: 75%;
+    margin: 10px auto;
+}
+.profile .booking p {
+    width: 100%;
+}
+.profile .booking button {
+    margin-bottom: 2px;
+}
