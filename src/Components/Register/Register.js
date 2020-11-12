@@ -10,7 +10,6 @@ class Register extends React.Component {
             confirmPassword: '',
             phone: '',
             error: '',
-            success: '',
             fname: '',
             lname: ''
         };
@@ -41,24 +40,24 @@ class Register extends React.Component {
     onTexboxChangeFname(event) {
         this.setState({ fname: event.target.value });
     }
-    onRegister() {
+    async onRegister() {
         const { email,
             password,
             phone,
             confirmPassword,
             fname,
             lname } = this.state;
-        if(!email || !password || !phone || !confirmPassword || !fname || !lname) {
-            this.setState({error: 'Fill all fields'});
+        if (!email || !password || !phone || !confirmPassword || !fname || !lname) {
+            this.setState({ error: 'Fill all fields' });
             return;
         }
-        if(password !== confirmPassword) {
-            this.setState({error: 'Passwords don\'t match'});
+        if (password !== confirmPassword) {
+            this.setState({ error: 'Passwords don\'t match' });
             return;
         }
-        fetch('/api/auth/signup', {
+        const res = await fetch('/api/auth/signup', {
             method: 'POST',
-            headers: { 'Content-type': 'application/json'},
+            headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
                 username: phone,
                 email,
@@ -66,20 +65,20 @@ class Register extends React.Component {
                 fname,
                 lname
             })
-        }).then(res => res.json())
-         .then(json => {
-             if(json.message === 'User registered successfully!') {
-                this.setState({email: '',
+        });
+        const json = await res.json();
+        if (json.message === 'User registered successfully!')
+            this.setState({
+                email: '',
                 password: '',
                 confirmPassword: '',
                 phone: '',
                 fname: '',
                 lname: '',
-                success: json.message});
-             } else {
-                this.setState({error: json.message});
-             }
-         })
+                error: json.message
+            });
+        else
+            this.setState({ error: json.message });
     }
     render() {
         const {
@@ -87,16 +86,16 @@ class Register extends React.Component {
             password,
             phone,
             error,
-            success,
             fname,
             lname,
             confirmPassword } = this.state;
-        return (
-            <div className="entire-register">
+        let errorColor = {'color': 'red'};
+        if(error.startsWith('User r'))
+            errorColor = {'color': 'blue'};
+        return <div className="entire-register">
                 <div className="box">
                     <h3>Registration</h3>
-                    {error ? (<p>{error}</p>) : null}
-                    {success ? (<p style={{color: 'blue'}}>{success}</p>) : null}
+                    {error ? (<p style={errorColor}>{error}</p>) : null}
                     <label>Phone</label><br />
                     <input value={phone} onChange={this.onTexboxChangePhone} /><br />
                     <label>Email</label><br />
@@ -114,8 +113,7 @@ class Register extends React.Component {
                         <div>Log in</div>
                     </Link>
                 </div>
-            </div>
-        );
+            </div>;
     }
 }
 export default Register;

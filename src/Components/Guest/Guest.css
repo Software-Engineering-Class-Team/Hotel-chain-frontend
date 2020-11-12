@@ -1,0 +1,9 @@
+.guest {
+    margin: -200px auto 0 auto;
+    text-align: center;
+}
+.guest-el {
+    border: thin solid black;
+    margin: 10px auto;
+    width: 75%;
+}

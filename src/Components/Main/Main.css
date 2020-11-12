@@ -50,6 +50,7 @@ margin: 0 auto;
 .link {
     color: #26992A;
     text-decoration: none;
+    cursor: pointer;
 }
 #button-main {
     width: 15%;

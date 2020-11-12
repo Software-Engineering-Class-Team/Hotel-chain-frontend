@@ -7,8 +7,7 @@ class Login extends React.Component {
         this.state = {
             username: '',
             password: '',
-            error: '',
-            success: ''
+            error: ''
         };
         this.onTexboxChangeUsername = this.onTexboxChangeUsername.bind(this);
         this.onTexboxChangePassword = this.onTexboxChangePassword.bind(this);
@@ -21,51 +20,49 @@ class Login extends React.Component {
     onTexboxChangePassword(event) {
         this.setState({ password: event.target.value });
     }
-    onLogin() {
+    async onLogin() {
         const { username,
             password } = this.state;
-        if(!username || !password) {
-            this.setState({error: 'Fill all fields'});
+        if (!username || !password) {
+            this.setState({ error: 'Fill all fields' });
             return;
         }
-        fetch('/api/auth/signin', {
+        const res = await fetch('/api/auth/signin', {
             method: 'POST',
-            headers: { 'Content-type': 'application/json',},
+            headers: { 'Content-type': 'application/json', },
             body: JSON.stringify({
                 username,
                 password
             })
-        }).then(res => res.json())
-         .then(json => {
-             if(json.accessToken) {
-                this.setState({success: `You successfully logged in. Your token is ${json.accessToken}`});
-                setInStorage('the_main_app', { token: json.accessToken,
-                    role: json.roles[0] });
-                
-             } else {
-                 this.setState({error: 'Username or password aren\'t correct'});
-             }
-         })
+        });
+        const json = await res.json();
+        if (json.accessToken) {
+            this.setState({ error: `You successfully logged in. Your token is ${json.accessToken}` });
+            setInStorage('the_main_app', {
+                token: json.accessToken,
+                role: json.roles[0]
+            });
+        } else
+            this.setState({ error: 'Username or password aren\'t correct' });
     }
     render() {
         const { username,
             password,
-            success,
             error } = this.state;
-        return (
-            <div className="entire-register">
-                <div className="box">
-                    <h3>Log in</h3>
-                    {error ? (<p>{error}</p>) : null}
-                    {success ? (<p style={{color: 'blue'}}>{success}</p>) : null}
-                    <label>Phone</label><br />
-                    <input value={username} onChange={this.onTexboxChangeUsername} /><br />
-                    <label>Password</label><br />
-                    <input type="password" value={password} onChange={this.onTexboxChangePassword} /><br />
-                    <button id="button-register" onClick={this.onLogin}>Enter</button>
-                </div>
+        let errorColor = { 'color': 'red' };
+        if (error.startsWith('You succ'))
+            errorColor = { 'color': 'blue' };
+        return <div className="entire-register">
+            <div className="box">
+                <h3>Log in</h3>
+                {error ? (<p style={errorColor}>{error}</p>) : null}
+                <label>Phone</label><br />
+                <input value={username} onChange={this.onTexboxChangeUsername} /><br />
+                <label>Password</label><br />
+                <input type="password" value={password} onChange={this.onTexboxChangePassword} /><br />
+                <button id="button-register" onClick={this.onLogin}>Enter</button>
             </div>
-        );
+        </div>;
     }
 }
 export default Login;

@@ -1,0 +1,9 @@
+.desk {
+    margin-top: -200px;
+    text-align: center;
+}
+.desk .guest {
+    border: thin solid black;
+    width: 75%;
+    margin: 10px auto;
+}

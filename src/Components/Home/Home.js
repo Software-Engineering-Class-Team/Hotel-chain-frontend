@@ -34,42 +34,37 @@ class Home extends React.Component {
     onTexboxChangeTo(event) {
         this.setState({ to: event.target.value });
     }
-    onEnterCity() {
+    async onEnterCity() {
         const { city } = this.state;
         const id = 1 + this.cities.indexOf(city);
         if (id === 0) {
+            console.log('No such city');
             return;
         }
-        fetch(`/api/hotel/about?Id=${id}`, {
-            headers: {
-                'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            }
-        })
-            .then(res => res.json())
-            .then(json => {
-                this.setState({
-                    roomTypes: json,
-                    hotelID: id
-                });
-            });
+        const res = await fetch(`/api/hotel/about?Id=${id}`);
+        const json = await res.json();
+        this.setState({
+            roomTypes: json,
+            hotelID: id
+        });
     }
     onChoose(i) {
         this.setState({ roomTypeID: i });
     }
-    onChooseDates() {
+    async onChooseDates() {
         const { from,
             to,
             hotelID,
             roomTypeID } = this.state;
         const obj = getFromStorage('the_main_app');
-        if (!obj || !obj.token)
+        if (!obj || !obj.token) {
+            console.log('Token doesn\'t exist');
             return;
-        fetch('/api/room/book', {
+        }
+        const res = await fetch('/api/room/book', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': 'X-Auth',
                 'Authorization': `Bearer ${obj.token}`
             },
             body: JSON.stringify({
@@ -78,10 +73,9 @@ class Home extends React.Component {
                 hotelId: hotelID,
                 roomId: roomTypeID
             })
-        }).then(res => res.json())
-            .then(json => {
-                this.setState({ message: json.message });
-            });
+        });
+        const json = await res.json();
+        this.setState({ message: json.message });
     }
     render() {
         const { roomTypes,
@@ -91,21 +85,19 @@ class Home extends React.Component {
             to,
             message,
             error } = this.state;
-        if (message) {
+        if (message)
             return <div className="home">
                 <h1>Room successfully booked!</h1>
             </div>;
-        }
-        if (roomTypes.length === 0) {
+        if (roomTypes.length === 0)
             return <div className="home">
                 <h1>Explore hotels</h1>
                 {error ? (<p>{error}</p>) : null}
                 <label>Where are you going?</label><br />
                 <input value={city} onChange={this.onTexboxChangeCity}></input>
                 <button onClick={this.onEnterCity}>Enter</button>
-            </div>
-        }
-        if (roomTypeID === -1) {
+            </div>;
+        if (roomTypeID === -1)
             return <div className="home">
                 <h1>Choose room type</h1>
                 {roomTypes.map((el, i) => <div key={i}>
@@ -114,9 +106,7 @@ class Home extends React.Component {
                     <p>Capacity (square meters): {el.capacity}</p>
                     <button onClick={() => this.onChoose(i + 1)}>Choose</button>
                 </div>)}
-            </div>
-        }
-
+            </div>;
         return <div className="home">
             <h1>Choose check-in and check-out dates</h1>
             {error ? (<p>{error}</p>) : null}
