@@ -18,7 +18,7 @@ class Main extends React.Component {
     }
     onLogout() {
         clear();
-        this.setState({role: ''});
+        this.setState({ role: '' });
     }
     render() {
         const {
@@ -60,6 +60,17 @@ class Main extends React.Component {
                 <ul>
                     <Link className="link" to="/desk">
                         <li>Manage bookings</li>
+                    </Link>
+                    <li className="link" id="logout" onClick={this.onLogout}>Log Out</li>
+                </ul>
+                <h1>HotelBook</h1>
+                <p>Welcome to HotelBook! Explore and book hotels near to you</p>
+            </div>;
+        else
+            return <div id="entire">
+                <ul>
+                    <Link className="link" to="/employees">
+                        <li>Manage schedules</li>
                     </Link>
                     <li className="link" id="logout" onClick={this.onLogout}>Log Out</li>
                 </ul>

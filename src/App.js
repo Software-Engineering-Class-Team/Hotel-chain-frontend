@@ -8,6 +8,8 @@ import Home from './Components/Home/Home';
 import Profile from './Components/Profile/Profile';
 import Desk from './Components/Desk/Desk';
 import Guest from './Components/Guest/Guest';
+import Employees from './Components/Employees/Employees';
+import Schedule from './Components/Schedule/Schedule';
 function App() {
   return <Router id="entire">
     <Switch>
@@ -18,6 +20,8 @@ function App() {
       <Route path="/profile" component={Profile} />
       <Route path="/desk" exact component={Desk} />
       <Route path="/desk/:id" component={Guest} />
+      <Route path="/employees" exact component={Employees} />
+      <Route path="/employees/:id" component={Schedule} />
     </Switch>
   </Router>;
 }

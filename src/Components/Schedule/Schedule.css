@@ -1,0 +1,8 @@
+.guest .employee-el {
+    width: 75%;
+    border: thin solid black;
+    margin: 10px auto;
+}
+.guest .employee-el p {
+    width: 100%;
+}
