@@ -12,7 +12,8 @@ class Home extends React.Component {
             to: '',
             hotelID: -1,
             message: '',
-            error: ''
+            error: '',
+            advisory: ''
         };
         this.onTexboxChangeCity = this.onTexboxChangeCity.bind(this);
         this.onEnterCity = this.onEnterCity.bind(this);
@@ -77,6 +78,14 @@ class Home extends React.Component {
         const json = await res.json();
         this.setState({ message: json.message });
     }
+    async componentDidMount() {
+        const res = await fetch(`/api/season/getadvisory`);
+        const json = await res.json();
+        if(json.message)
+            this.setState({advisory: json.message});
+        else
+            console.log('Something went wrong');
+    }
     render() {
         const { roomTypes,
             roomTypeID,
@@ -84,6 +93,7 @@ class Home extends React.Component {
             from,
             to,
             message,
+            advisory,
             error } = this.state;
         if (message)
             return <div className="home">
@@ -95,7 +105,8 @@ class Home extends React.Component {
                 {error ? (<p>{error}</p>) : null}
                 <label>Where are you going?</label><br />
                 <input value={city} onChange={this.onTexboxChangeCity}></input>
-                <button onClick={this.onEnterCity}>Enter</button>
+                <button onClick={this.onEnterCity}>Enter</button><br/>
+                {advisory}
             </div>;
         if (roomTypeID === -1)
             return <div className="home">

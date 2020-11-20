@@ -29,15 +29,12 @@ class Employees extends React.Component {
             isLoading,
             employees
         } = this.state;
-        if (isLoading)
-            return <div className="desk">
-                <h1>List of employees</h1>
+        return <div className="desk">
+            <h1>List of employees</h1>
+            {isLoading ?
                 <h2>Loading...</h2>
-            </div>
-        else
-            return <div className="desk">
-                <h1>List of employees</h1>
-                {employees.map((employee, i) => <div key={i} className="guest">
+                :
+                employees.map((employee, i) => <div key={i} className="guest">
                     <p>{employee.name}</p>
                     <p>Address: {employee.address} | Phone number: {employee.phoneNumber} | Occupation: {employee.occupation}</p>
                     <Link to={{
@@ -49,7 +46,7 @@ class Employees extends React.Component {
                         }
                     }}><button>See schedule</button></Link>
                 </div>)}
-            </div>
+        </div>
     }
 }
 

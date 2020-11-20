@@ -56,7 +56,7 @@ class Profile extends React.Component {
         if (json.message.startsWith('C')) {
             this.state.ids.splice(i);
             this.fetchBookings();
-        } else 
+        } else
             console.log('Something went wrong');
     }
     render() {
@@ -65,24 +65,21 @@ class Profile extends React.Component {
             upcomingBookings,
             pastBookings
         } = this.state;
-        if (isLoading)
-            return <div className="profile">
+        return isLoading ?
+            <h3>Loading...</h3>
+            :
+            <div className="profile">
                 <h1>Your reservations</h1>
+                <h2>Your past reservations:</h2>
+                {pastBookings.map((reservation, i) => <div key={i} className="booking">
+                    <ReservationInfo reservation={reservation} />
+                </div>)}
                 <h2>Your upcoming reservations:</h2>
-                <h3>Loading...</h3>
+                {upcomingBookings.map((reservation, i) => <div key={i} className="booking">
+                    <ReservationInfo reservation={reservation} />
+                    <button onClick={() => this.onCancel(i)}>Cancel booking</button>
+                </div>)}
             </div>
-        return <div className="profile">
-            <h1>Your reservations</h1>
-            <h2>Your past reservations:</h2>
-            {pastBookings.map((reservation, i) => <div key={i} className="booking">
-                <ReservationInfo reservation={reservation}/>
-            </div>)}
-            <h2>Your upcoming reservations:</h2>
-            {upcomingBookings.map((reservation, i) => <div key={i} className="booking">
-                <ReservationInfo reservation={reservation}/>
-                <button onClick={() => this.onCancel(i)}>Cancel booking</button>
-            </div>)}
-        </div>
     }
 }
 export default Profile;

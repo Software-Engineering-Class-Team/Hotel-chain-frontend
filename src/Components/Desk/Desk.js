@@ -30,23 +30,21 @@ class Desk extends React.Component {
             isLoading,
             guests
         } = this.state;
-        if (isLoading)
-            return <div className="desk">
-                <h1>List of guests</h1>
+        return <div className="desk">
+            <h1>List of guests</h1>
+            {isLoading ?
                 <h2>Loading...</h2>
-            </div>
-        else
-            return <div className="desk">
-                <h1>List of guests</h1>
-                {guests.map((user, i) => <div key={i} className="guest">
+                :
+                guests.map((user, i) => <div key={i} className="guest">
                     <p>{user.username}</p>
                     <p>{user.email}</p>
                     <Link to={{
                         pathname: `/desk/${user.id}`,
-                        state: {username: user.username}
+                        state: { username: user.username }
                     }}><button>See bookings</button></Link>
-                </div>)}
-            </div>
+                </div>)
+            }
+        </div>
     }
 }
 export default Desk;

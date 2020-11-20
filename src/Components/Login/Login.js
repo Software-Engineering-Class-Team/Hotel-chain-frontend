@@ -16,7 +16,6 @@ class Login extends React.Component {
     onTexboxChangeUsername(event) {
         this.setState({ username: event.target.value });
     }
-
     onTexboxChangePassword(event) {
         this.setState({ password: event.target.value });
     }
@@ -40,7 +39,8 @@ class Login extends React.Component {
             this.setState({ error: `You successfully logged in. Your token is ${json.accessToken}` });
             setInStorage('the_main_app', {
                 token: json.accessToken,
-                role: json.roles[0]
+                role: json.roles[0],
+                hotelId: json.hotelId
             });
         } else
             this.setState({ error: 'Username or password aren\'t correct' });

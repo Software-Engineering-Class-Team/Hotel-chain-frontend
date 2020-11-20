@@ -37,9 +37,7 @@ class Main extends React.Component {
                 </ul>
                 <h1>HotelBook</h1>
                 <p>Welcome to HotelBook! Explore and book hotels near to you</p>
-                <Link to="/home">
-                    <button id="button-main">Book hotel</button>
-                </Link>
+                <p>Log in to continue</p>
             </div>;
         else if (role === "ROLE_USER")
             return <div id="entire">
@@ -72,6 +70,11 @@ class Main extends React.Component {
                     <Link className="link" to="/employees">
                         <li>Manage schedules</li>
                     </Link>
+                    <li>|</li>
+                    <Link className="link" to="/seasons">
+                        <li>Manage seasonal rates</li>
+                    </Link>
+                    <li>|</li>
                     <li className="link" id="logout" onClick={this.onLogout}>Log Out</li>
                 </ul>
                 <h1>HotelBook</h1>
@@ -79,5 +82,4 @@ class Main extends React.Component {
             </div>;
     }
 }
-
 export default Main;

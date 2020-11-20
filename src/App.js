@@ -10,6 +10,7 @@ import Desk from './Components/Desk/Desk';
 import Guest from './Components/Guest/Guest';
 import Employees from './Components/Employees/Employees';
 import Schedule from './Components/Schedule/Schedule';
+import Seasons from './Components/Seasons/Seasons';
 function App() {
   return <Router id="entire">
     <Switch>
@@ -22,6 +23,7 @@ function App() {
       <Route path="/desk/:id" component={Guest} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/employees/:id" component={Schedule} />
+      <Route path="/seasons" component={Seasons} />
     </Switch>
   </Router>;
 }
