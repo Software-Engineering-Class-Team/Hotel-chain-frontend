@@ -90,6 +90,7 @@ class Seasons extends React.Component {
             })
         });
         const json = await res.json();
+        console.log(json)
         if (Number.isInteger(json)) {
             const res1 = await fetch(`/api/season/addSeasonToHotel?hotelId=${obj.hotelId}&seasonId=${json}`, {
                 method: 'POST',
@@ -110,7 +111,7 @@ class Seasons extends React.Component {
             } else
                 console.log('Something went wrong');
         } else
-            console.log('Something went wrong here');
+            console.log('Something went wrong й');
     }
     render() {
         const {

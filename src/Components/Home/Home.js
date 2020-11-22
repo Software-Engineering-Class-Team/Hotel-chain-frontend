@@ -7,13 +7,13 @@ class Home extends React.Component {
         this.state = {
             city: '',
             roomTypes: [],
-            roomTypeID: -1,
             from: '',
             to: '',
             hotelID: -1,
             message: '',
             error: '',
-            advisory: ''
+            advisory: '',
+            selectedCity: false
         };
         this.onTexboxChangeCity = this.onTexboxChangeCity.bind(this);
         this.onEnterCity = this.onEnterCity.bind(this);
@@ -35,34 +35,29 @@ class Home extends React.Component {
     onTexboxChangeTo(event) {
         this.setState({ to: event.target.value });
     }
-    async onEnterCity() {
+    onEnterCity() {
         const { city } = this.state;
         const id = 1 + this.cities.indexOf(city);
         if (id === 0) {
-            console.log('No such city');
+            this.setState({ error: "No such city!" });
             return;
         }
-        const res = await fetch(`/api/hotel/about?Id=${id}`);
-        const json = await res.json();
         this.setState({
-            roomTypes: json,
+            selectedCity: true,
+            error: '',
             hotelID: id
         });
     }
-    onChoose(i) {
-        this.setState({ roomTypeID: i });
-    }
-    async onChooseDates() {
+    async onChoose(id) {
         const { from,
             to,
-            hotelID,
-            roomTypeID } = this.state;
+            hotelID } = this.state;
         const obj = getFromStorage('the_main_app');
         if (!obj || !obj.token) {
             console.log('Token doesn\'t exist');
             return;
         }
-        const res = await fetch('/api/room/book', {
+        const res = await fetch('/api/bookings/reserve', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -72,61 +67,88 @@ class Home extends React.Component {
                 from,
                 to,
                 hotelId: hotelID,
-                roomId: roomTypeID
+                roomId: id
             })
         });
         const json = await res.json();
         this.setState({ message: json.message });
     }
+    async onChooseDates() {
+        const { from,
+            to,
+            hotelID } = this.state;
+        const obj = getFromStorage('the_main_app');
+        if (!obj || !obj.token) {
+            console.log('Token doesn\'t exist');
+            return;
+        }
+        const res = await fetch('/api/bookings/availableRoomTypes', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                from,
+                to,
+                hotelId: hotelID
+            })
+        });
+        const json = await res.json();
+        if (!json.error)
+            this.setState({ roomTypes: json });
+        else
+            console.log('Something went wrong');
+    }
     async componentDidMount() {
         const res = await fetch(`/api/season/getadvisory`);
         const json = await res.json();
-        if(json.message)
-            this.setState({advisory: json.message});
+        if (json.message)
+            this.setState({ advisory: json.message });
         else
             console.log('Something went wrong');
     }
     render() {
         const { roomTypes,
-            roomTypeID,
             city,
             from,
             to,
             message,
             advisory,
+            selectedCity,
             error } = this.state;
         if (message)
             return <div className="home">
                 <h1>Room successfully booked!</h1>
             </div>;
-        if (roomTypes.length === 0)
+        if (!selectedCity)
             return <div className="home">
                 <h1>Explore hotels</h1>
-                {error ? (<p>{error}</p>) : null}
                 <label>Where are you going?</label><br />
+                {error ? (<p style={{ 'color': "red" }}>{error}</p>) : null}
                 <input value={city} onChange={this.onTexboxChangeCity}></input>
-                <button onClick={this.onEnterCity}>Enter</button><br/>
+                <button onClick={this.onEnterCity}>Enter</button><br />
                 {advisory}
             </div>;
-        if (roomTypeID === -1)
+        if (roomTypes.length === 0)
             return <div className="home">
-                <h1>Choose room type</h1>
-                {roomTypes.map((el, i) => <div key={i}>
-                    <p>{el.name}</p>
-                    <p>Size (for how many people): {el.size}</p>
-                    <p>Capacity (square meters): {el.capacity}</p>
-                    <button onClick={() => this.onChoose(i + 1)}>Choose</button>
-                </div>)}
-            </div>;
+                <h1>Choose check-in and check-out dates</h1>
+                {error ? (<p>{error}</p>) : null}
+                <label>Check-in date</label><br />
+                <input value={from} onChange={this.onTexboxChangeFrom}></input><br />
+                <label>Check-out date</label><br />
+                <input value={to} onChange={this.onTexboxChangeTo}></input><br />
+                <button onClick={this.onChooseDates}>Choose</button>
+            </div>
         return <div className="home">
-            <h1>Choose check-in and check-out dates</h1>
-            {error ? (<p>{error}</p>) : null}
-            <label>Check-in date</label><br />
-            <input value={from} onChange={this.onTexboxChangeFrom}></input><br />
-            <label>Check-out date</label><br />
-            <input value={to} onChange={this.onTexboxChangeTo}></input><br />
-            <button onClick={this.onChooseDates}>Choose</button>
-        </div>
+            <h1>Choose room type</h1>
+            {roomTypes.map(el => <div key={el.id}>
+                <p>{el.name}</p>
+                <p>Size (for how many people): {el.size}</p>
+                <p>Capacity (square meters): {el.capacity}</p>
+                <p>Price for a night: {el.price}</p>
+                <button onClick={() => this.onChoose(el.id)}>Choose</button>
+            </div>)}
+        </div>;
     }
 }
 

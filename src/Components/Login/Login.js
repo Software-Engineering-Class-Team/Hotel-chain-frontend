@@ -14,10 +14,16 @@ class Login extends React.Component {
         this.onLogin = this.onLogin.bind(this);
     }
     onTexboxChangeUsername(event) {
-        this.setState({ username: event.target.value });
+        this.setState({
+            username: event.target.value,
+            error: ''
+        });
     }
     onTexboxChangePassword(event) {
-        this.setState({ password: event.target.value });
+        this.setState({
+            password: event.target.value,
+            error: ''
+        });
     }
     async onLogin() {
         const { username,
@@ -36,7 +42,8 @@ class Login extends React.Component {
         });
         const json = await res.json();
         if (json.accessToken) {
-            this.setState({ error: `You successfully logged in. Your token is ${json.accessToken}` });
+            this.setState({ error: `You successfully logged in` });
+            console.log(json.accessToken);
             setInStorage('the_main_app', {
                 token: json.accessToken,
                 role: json.roles[0],
@@ -52,11 +59,11 @@ class Login extends React.Component {
         let errorColor = { 'color': 'red' };
         if (error.startsWith('You succ'))
             errorColor = { 'color': 'blue' };
-        return <div className="entire-register">
-            <div className="box">
+        return <div className="entire-register" id="entire-login">
+            <div className="box" id="login">
                 <h3>Log in</h3>
                 {error ? (<p style={errorColor}>{error}</p>) : null}
-                <label>Phone</label><br />
+                <label>Username</label><br />
                 <input value={username} onChange={this.onTexboxChangeUsername} /><br />
                 <label>Password</label><br />
                 <input type="password" value={password} onChange={this.onTexboxChangePassword} /><br />

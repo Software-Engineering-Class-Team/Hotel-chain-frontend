@@ -36,8 +36,12 @@ class Desk extends React.Component {
                 <h2>Loading...</h2>
                 :
                 guests.map((user, i) => <div key={i} className="guest">
-                    <p>{user.username}</p>
-                    <p>{user.email}</p>
+                    <p>Username: {user.username}</p>
+                    <p>Email: {user.email}</p>
+                    <p>Mobile phone number: {user.mobile_phone_number}</p>
+                    <p>Home phone number: {user.home_phone_number}</p>
+                    <p>ID type: {user.identification_type}</p>
+                    <p>ID number: {user.it_number}</p>
                     <Link to={{
                         pathname: `/desk/${user.id}`,
                         state: { username: user.username }

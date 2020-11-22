@@ -1,6 +1,5 @@
 import React from 'react';
 import './Register.css';
-import { Link } from 'react-router-dom';
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -11,43 +10,64 @@ class Register extends React.Component {
             phone: '',
             error: '',
             fname: '',
-            lname: ''
+            lname: '',
+            username: '',
+            idType: false,
+            homePhone: '',
+            idNum: ''
         };
-        this.onTexboxChangeEmail = this.onTexboxChangeEmail.bind(this);
-        this.onTexboxChangePassword = this.onTexboxChangePassword.bind(this);
-        this.onTexboxChangeConfirmPassword = this.onTexboxChangeConfirmPassword.bind(this);
-        this.onTexboxChangePhone = this.onTexboxChangePhone.bind(this);
-        this.onTexboxChangeFname = this.onTexboxChangeFname.bind(this);
-        this.onTexboxChangeLname = this.onTexboxChangeLname.bind(this);
+        this.onTextboxChangeEmail = this.onTextboxChangeEmail.bind(this);
+        this.onTextboxChangePassword = this.onTextboxChangePassword.bind(this);
+        this.onTextboxChangeConfirmPassword = this.onTextboxChangeConfirmPassword.bind(this);
+        this.onTextboxChangePhone = this.onTextboxChangePhone.bind(this);
+        this.onTextboxChangeUsername = this.onTextboxChangeUsername.bind(this);
         this.onRegister = this.onRegister.bind(this);
+        this.onTextboxChangeIdNum = this.onTextboxChangeIdNum.bind(this);
+        this.onTextboxChangeHomePhone = this.onTextboxChangeHomePhone.bind(this);
     }
-    onTexboxChangeEmail(event) {
+    onTextboxChangeEmail(event) {
         this.setState({ email: event.target.value });
     }
-
-    onTexboxChangePassword(event) {
+    onTextboxChangeIdNum(event) {
+        this.setState({ idNum: event.target.value });
+    }
+    onTextboxChangeUsername(event) {
+        this.setState({
+            username: event.target.value,
+            error: ''
+        });
+    }
+    onTextboxChangePassword(event) {
         this.setState({ password: event.target.value });
     }
-    onTexboxChangePhone(event) {
+    onTextboxChangePhone(event) {
         this.setState({ phone: event.target.value });
     }
-    onTexboxChangeConfirmPassword(event) {
-        this.setState({ confirmPassword: event.target.value });
+    onTextboxChangeHomePhone(event) {
+        this.setState({
+            homePhone: event.target.value,
+            error: ''
+        });
     }
-    onTexboxChangeLname(event) {
-        this.setState({ lname: event.target.value });
+    onTextboxChangeConfirmPassword(event) {
+        this.setState({
+            confirmPassword: event.target.value,
+            error: ''
+        });
     }
-    onTexboxChangeFname(event) {
-        this.setState({ fname: event.target.value });
+    onchangeRadio(val) {
+        this.setState({ idType: val });
     }
     async onRegister() {
         const { email,
             password,
             phone,
             confirmPassword,
-            fname,
-            lname } = this.state;
-        if (!email || !password || !phone || !confirmPassword || !fname || !lname) {
+            username,
+            idType,
+            homePhone,
+            idNum } = this.state;
+        if (!email || !password || !phone || !confirmPassword || !username || !homePhone || !idNum) {
             this.setState({ error: 'Fill all fields' });
             return;
         }
@@ -59,11 +79,14 @@ class Register extends React.Component {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
-                username: phone,
-                email,
+                username,
                 password,
-                fname,
-                lname
+                role: ["user"],
+                identification_type: idType ? "Driving licence" : "Passport",
+                home_phone_number: homePhone,
+                IT_number: parseInt(idNum),
+                mobile_phone_number: phone,
+                email
             })
         });
         const json = await res.json();
@@ -73,9 +96,10 @@ class Register extends React.Component {
                 password: '',
                 confirmPassword: '',
                 phone: '',
-                fname: '',
-                lname: '',
-                error: json.message
+                error: json.message,
+                username: '',
+                homePhone: '',
+                idNum: ''
             });
         else
             this.setState({ error: json.message });
@@ -86,34 +110,44 @@ class Register extends React.Component {
             password,
             phone,
             error,
-            fname,
-            lname,
-            confirmPassword } = this.state;
-        let errorColor = {'color': 'red'};
-        if(error.startsWith('User r'))
-            errorColor = {'color': 'blue'};
+            confirmPassword,
+            username,
+            idType,
+            idNum,
+            homePhone
+        } = this.state;
+        let errorColor = { 'color': 'red' };
+        if (error.startsWith('User r'))
+            errorColor = { 'color': 'blue' };
         return <div className="entire-register">
-                <div className="box">
-                    <h3>Registration</h3>
-                    {error ? (<p style={errorColor}>{error}</p>) : null}
-                    <label>Phone</label><br />
-                    <input value={phone} onChange={this.onTexboxChangePhone} /><br />
-                    <label>Email</label><br />
-                    <input value={email} onChange={this.onTexboxChangeEmail} /><br />
-                    <label>First name</label><br />
-                    <input value={fname} onChange={this.onTexboxChangeFname} /><br />
-                    <label>Last name</label><br />
-                    <input value={lname} onChange={this.onTexboxChangeLname} /><br />
-                    <label>Password</label><br />
-                    <input type="password" value={password} onChange={this.onTexboxChangePassword} /><br />
-                    <label>Repeat Password</label><br />
-                    <input type="password" value={confirmPassword} onChange={this.onTexboxChangeConfirmPassword}></input>
-                    <button id="button-register" onClick={this.onRegister}>Register</button>
-                    <Link className="link" to="/login">
-                        <div>Log in</div>
-                    </Link>
+            <div className="box">
+                <h3>Registration</h3>
+                {error ? (<p style={errorColor}>{error}</p>) : null}
+                <label>Username</label><br />
+                <input value={username} onChange={this.onTextboxChangeUsername} /><br />
+                <label>Mobile phone number</label><br />
+                <input value={phone} onChange={this.onTextboxChangePhone} /><br />
+                <label>Home phone number</label><br />
+                <input value={homePhone} onChange={this.onTextboxChangeHomePhone} /><br />
+                <label>Email</label><br />
+                <input value={email} onChange={this.onTextboxChangeEmail} /><br />
+                <label>Password</label><br /><br />
+                <label>Identification type</label><br />
+                <div className="idType">
+                    <label id="radio">Passport</label>
+                    <input type="radio" checked={!idType} onChange={() => this.onchangeRadio(false)} />
+                    <label id="radio1">Driving licence</label>
+                    <input type="radio" checked={idType} onChange={() => this.onchangeRadio(true)} /><br />
                 </div>
-            </div>;
+                <label>ID number</label><br />
+                <input value={idNum} onChange={this.onTextboxChangeIdNum} /><br />
+                <label>Password</label><br />
+                <input type="password" value={password} onChange={this.onTextboxChangePassword} /><br />
+                <label>Repeat Password</label><br />
+                <input type="password" value={confirmPassword} onChange={this.onTextboxChangeConfirmPassword}></input>
+                <button id="button-register" onClick={this.onRegister}>Register</button>
+            </div>
+        </div>;
     }
 }
 export default Register;

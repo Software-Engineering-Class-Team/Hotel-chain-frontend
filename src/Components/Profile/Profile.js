@@ -53,11 +53,11 @@ class Profile extends React.Component {
             body: JSON.stringify({ Id: ids[i] })
         });
         const json = await res.json();
-        if (json.message.startsWith('C')) {
+        if (json.message.startsWith('The reservation with id')) {
             this.state.ids.splice(i);
             this.fetchBookings();
         } else
-            console.log('Something went wrong');
+            console.log('Something went wrong here');
     }
     render() {
         const {

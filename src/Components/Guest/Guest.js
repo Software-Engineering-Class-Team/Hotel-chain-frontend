@@ -85,13 +85,15 @@ class Guest extends React.Component {
         const {
             newCheckIn,
             newCheckOut,
-            reservationIds
+            reservationIds,
+            reservations
         } = this.state;
         const obj = getFromStorage('the_main_app');
         if (!obj || !obj.token) {
             console.log('Token doesn\'t exist');
             return;
         }
+        console.log(reservationIds[i])
         const res = await fetch(`/api/bookings/editBooking`, {
             method: 'POST',
             headers: {
@@ -101,14 +103,16 @@ class Guest extends React.Component {
             body: JSON.stringify({
                 reservationId: reservationIds[i],
                 from: newCheckIn,
-                to: newCheckOut
+                to: newCheckOut,
+                roomTypeId: reservations[i].roomType.id
             })
         });
         const json = await res.json();
+        console.log(json.message)
         if(json.message.startsWith('succesfully'))
             this.fetchReservations();
         else
-            console.log('Something went wrong');
+            console.log('Something went wrong here');
     }
     render() {
         const {
